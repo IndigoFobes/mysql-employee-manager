@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/IndigoFobes/mysql-employee-manager/issues"
   },
-  "homepage": "https://github.com/IndigoFobes/mysql-employee-manager#readme"
+  "homepage": "https://github.com/IndigoFobes/mysql-employee-manager#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^9.1.2",
+    "mysql2": "^2.3.3"
+  }
 }
