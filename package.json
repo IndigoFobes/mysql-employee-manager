@@ -1,0 +1,22 @@
+{
+  "name": "employee-manager",
+  "version": "1.0.0",
+  "description": "mysql app used to manage employees within a company.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IndigoFobes/mysql-employee-manager.git"
+  },
+  "keywords": [
+    "Mysql"
+  ],
+  "author": "Indigo Fobes",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/IndigoFobes/mysql-employee-manager/issues"
+  },
+  "homepage": "https://github.com/IndigoFobes/mysql-employee-manager#readme"
+}
