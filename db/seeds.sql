@@ -18,7 +18,9 @@ VALUES  ('Director', 60000, 1),
 
 INSERT INTO employee (first_name, last_name, role, manager_id)
 VALUES  ('Ginna', 'Richards', 6, null),
-        ('George', 'Hersh', 2, 1),
-        ('Marcus', 'Antonio', 5, null),
+        ('Bob', 'Foster', 1, null),
+        ('Marcus', 'Antonio', 5, 1),
         ('Lorraine', 'Flem', 3, null),
-        ('Abi', 'Hannigan', 4, 4);
+        ('Abi', 'Hannigan', 4, 4),
+        ('George', 'Hersh', 2, 2);
+        

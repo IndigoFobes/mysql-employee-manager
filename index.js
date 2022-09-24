@@ -1,13 +1,5 @@
-// const express = require('express');
-
 const mysql = require('mysql2');
 const cTable = require('console.table');
-
-// const app = express();
-
-// middleware for express
-// app.use(express.urlencoded({ extended: false}));
-// app.use(express.json());
 
 // connect mysql to database
 const connection = mysql.createConnection(
@@ -37,4 +29,17 @@ connection.query(
         //console.log(fields);
     }
 );
-// select role.id, title, salary, department.name as department name FROM role JOIN department ON role.department_id=department.id;
+
+// query to view all employees
+connection.query(
+    'select employee.id, first_name, last_name, role.title, salary, department.name AS \'department name\' from employee JOIN role ON employee.role=role.id JOIN department ON role.department_id=department.id;',
+    function(err, results, fields) {
+        console.table(results);
+        //console.log(fields);
+    }
+);
+// select employee.id, first_name, last_name, role.title, salary, department.name AS 'department name' from employee JOIN role ON employee.role=role.id JOIN department ON role.department_id=department.id;
+
+// select a.id, a.first_name, a.last_name, role.title, role.salary, department.name AS 'department name', a.manager_id as 'Manager Name' from employee a JOIN role ON a.role=role.id JOIN department ON role.department_id=department.id JOIN employee b on employee a where b.id = a.manager_id;
+
+// select * from employee a join employee b on a.manager_id=b.id;
