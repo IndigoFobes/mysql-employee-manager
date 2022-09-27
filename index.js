@@ -45,3 +45,5 @@ connection.query(
 // select * from employee a join employee b on a.manager_id=b.id;
 
 // *** select * from employee a left join employee b on a.manager_id=b.id;
+
+// select a.id as ID, CONCAT(a.first_name, ' ', a.last_name) AS Employee, role.title AS 'Job Title', salary AS Salary, department.name AS Department, CONCAT(b.first_name, ' ', b.last_name) AS Manager from employee a JOIN role ON a.role=role.id JOIN department ON role.department_id=department.id LEFT JOIN employee b ON a.manager_id=b.id;
