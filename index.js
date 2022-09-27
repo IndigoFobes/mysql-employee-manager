@@ -43,3 +43,5 @@ connection.query(
 // select a.id, a.first_name, a.last_name, role.title, role.salary, department.name AS 'department name', a.manager_id as 'Manager Name' from employee a JOIN role ON a.role=role.id JOIN department ON role.department_id=department.id JOIN employee b on employee a where b.id = a.manager_id;
 
 // select * from employee a join employee b on a.manager_id=b.id;
+
+// *** select * from employee a left join employee b on a.manager_id=b.id;
