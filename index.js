@@ -3,7 +3,7 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const { default: Choices } = require('inquirer/lib/objects/choices');
 
-const deptArray = ['Production', 'Marketing', 'Design', 'Performance', 'Sales', 'Building'];
+const deptArray = [];
 
 // connect mysql to database
 const connection = mysql.createConnection(
@@ -56,7 +56,22 @@ const addDepartment = () => {
             function(err, results, fields) {
                 console.log(results);
             }
+        );
+        //deptArray.push(response.newDepartment);
+        //console.log(deptArray);
+        connection.query(
+            'Select name from department;',
+            function(err, results, fields) {
+                console.log(results.length);
+                //push each department name in database into a usable array
+                results.forEach(dept => 
+                    deptArray.push(dept.name));
+
+                    console.log(deptArray);
+
+            }
         )
+
     })
 
 }
@@ -79,7 +94,7 @@ const addRole = () => {
             name: 'department',
             type: 'list',
             message: 'Please select the department to which this role belongs:',
-            choices: []
+            choices: deptArray
         },
 
     ])
@@ -127,6 +142,9 @@ inquirer
     }
     else if (response.home === 'Add a department') {
         addDepartment();
+    }
+    else if (response.home === 'Add a role') {
+        addRole();
     }
     else if (response.home === 'Quit') {
         // Can I mak it exit the application, as in '^C'?
