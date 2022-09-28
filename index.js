@@ -38,7 +38,27 @@ const viewRoles = () => {
     );
 }
 
+// query to add a department
+const addDepartment = () => {
 
+    inquirer.prompt([
+        {
+            name: 'newDepartment',
+            type: 'text',
+            message: 'Please enter new department name:'
+        }
+    ])
+    .then((response) => {
+        connection.query(
+            `INSERT into department (name) VALUES ('${response.newDepartment}');`,
+            function(err, results, fields) {
+                console.log(results);
+            }
+        )
+    })
+
+    
+}
 
 // query to view all employees
 const viewEmployees = () => {
@@ -78,6 +98,9 @@ inquirer
     }
     else if (response.home === 'View all employees') {
         viewEmployees();
+    }
+    else if (response.home === 'Add a department') {
+        addDepartment();
     }
     else if (response.home === 'Quit') {
         // Can I mak it exit the application, as in '^C'?
