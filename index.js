@@ -54,24 +54,12 @@ const addDepartment = () => {
         connection.query(
             `INSERT into department (name) VALUES ('${response.newDepartment}');`,
             function(err, results, fields) {
-                console.log(results);
+                deptArray.push(response.newDepartment);
+                askQuestion();
+                //console.log(results);
             }
         );
-        //deptArray.push(response.newDepartment);
-        //console.log(deptArray);
-        connection.query(
-            'Select name from department;',
-            function(err, results, fields) {
-                console.log(results.length);
-                //push each department name in database into a usable array
-                results.forEach(dept => 
-                    deptArray.push(dept.name));
-
-                    console.log(deptArray);
-
-            }
-        )
-
+        
     })
 
 }
@@ -158,4 +146,25 @@ inquirer
 });
 };
 
-askQuestion();
+const init = () => {
+
+    // Push departments names from database into a usable array
+    connection.query(
+        'Select name from department;',
+        function(err, results, fields) {
+            //console.log(results.length);
+            //push each department name in database into a usable array
+            results.forEach(dept => 
+                deptArray.push(dept.name));
+
+                //console.log(deptArray);
+
+        }
+    );
+
+    // Ask first question
+    askQuestion();
+}
+
+// Start app
+init();
