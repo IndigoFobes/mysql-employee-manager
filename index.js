@@ -3,6 +3,8 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const { default: Choices } = require('inquirer/lib/objects/choices');
 
+const deptArray = ['Production', 'Marketing', 'Design', 'Performance', 'Sales', 'Building'];
+
 // connect mysql to database
 const connection = mysql.createConnection(
     {
@@ -57,8 +59,32 @@ const addDepartment = () => {
         )
     })
 
-    
 }
+
+// query to add a role
+const addRole = () => {
+
+    inquirer.prompt([
+        {
+            name: 'newRole',
+            type: 'text',
+            message: 'Please enter the new role title:'
+        },
+        {
+            name: 'salary',
+            type: 'text',
+            message: 'Please enter the salary for this new role:'
+        },
+        {
+            name: 'department',
+            type: 'list',
+            message: 'Please select the department to which this role belongs:',
+            choices: []
+        },
+
+    ])
+}
+
 
 // query to view all employees
 const viewEmployees = () => {
