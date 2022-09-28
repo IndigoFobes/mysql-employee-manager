@@ -42,7 +42,6 @@ const viewRoles = () => {
 
 // query to add a department
 const addDepartment = () => {
-
     inquirer.prompt([
         {
             name: 'newDepartment',
@@ -59,14 +58,11 @@ const addDepartment = () => {
                 //console.log(results);
             }
         );
-        
     })
-
 }
 
 // query to add a role
 const addRole = () => {
-
     inquirer.prompt([
         {
             name: 'newRole',
@@ -84,8 +80,12 @@ const addRole = () => {
             message: 'Please select the department to which this role belongs:',
             choices: deptArray
         },
-
     ])
+    .then((response) => {
+        connection.query(
+            `INSERT into role (title, salary, department_id)`
+        )
+    })
 }
 
 
