@@ -19,12 +19,12 @@
   <a name="installation"></a>
   ## Installation 
 
-  To install this application, make sure you have node installed and both node and npm up to date on your device. Clone the code and run npm i to install the packages included in the package.json file. After completing these installations, navigate into the main folder on you terminal and run node index.js. 
+  To install this application, make sure you have node installed and both node and npm up to date on your device. Clone the code and run npm i to install the packages included in the package.json file. 
 
   <a name="usage"></a>
   ## Usage
 
-  As mentioned in installation instructions, run node index.js and follow the given prompts. To add a department, you will be asked to type in the new department name, to view a role, simply click the view all roles option, and so on.
+  Navigate into the db folder in your terminal. Enter mysql -u username -p and then enter your password. Run source schema.sql and then source seeds.sql. Then quit mysql and cd into the root directory. Run node index.js and follow the given prompts. To add a department, you will be asked to type in the new department name, to view a role, simply click the view all roles option, and so on. 
 
   
 
