@@ -124,7 +124,8 @@ const addRole = () => {
                 connection.query(
                     `INSERT into role (title, salary, department_id) VALUES ('${roleTitle}', ${roleSalary}, ${deptId});`,
                     function (err, results, fields) {
-                        console.log(results);
+                        //console.log(results);
+                        roleArray.push(roleTitle);
                         askQuestion();
                     }
                 );
