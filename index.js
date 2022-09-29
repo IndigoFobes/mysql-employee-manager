@@ -84,12 +84,16 @@ const addRole = () => {
     .then((response) => {
         // first, get the department id
         const roleDept = response.department;
+        console.log(roleDept);
         // select id from department where name = ${roleDept}
         connection.query(
-            `select id from department where name = ${roleDept}`,
-            function(err, results, fields) {
-                console.log(results);
+            `SELECT id FROM department WHERE name = ?`, roleDept, (err,result) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(result[0].id);
             }
+            
         )
         
         // connection.query(
