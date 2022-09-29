@@ -82,16 +82,29 @@ const addRole = () => {
         },
     ])
     .then((response) => {
-        // first, get the department id
+        // first, set user input to constants
         const roleDept = response.department;
-        console.log(roleDept);
-        // select id from department where name = ${roleDept}
+        const roleTitle = response.newRole;
+        const roleSalary = response.salary;
+        // console.log(roleDept);
         connection.query(
+            // Get the id of the chosen department for the new role
             `SELECT id FROM department WHERE name = ?`, roleDept, (err,result) => {
                 if (err) {
                     console.log(err);
                 }
-                console.log(result[0].id);
+
+                // This constant is the id of the new role's department
+                const deptId = result[0].id;
+
+                connection.query(
+                    `INSERT into role (title, salary, department_id) VALUES ('${roleTitle}', ${roleSalary}, ${deptId});`,
+                    function (err, results, fields) {
+                        console.log(results);
+                        askQuestion();
+                    }
+                )
+
             }
             
         )
