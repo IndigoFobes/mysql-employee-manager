@@ -26,10 +26,8 @@
 
   Navigate into the db folder in your terminal. Enter mysql -u username -p and then enter your password. Run source schema.sql and then source seeds.sql. Then quit mysql and cd into the root directory. Run node index.js and follow the given prompts. To add a department, you will be asked to type in the new department name, to view a role, simply click the view all roles option, and so on. 
 
-  
 
-https://user-images.githubusercontent.com/105685042/192918761-95d95ba6-2fa9-4fea-a09d-f5d6b033bfb8.mp4
-
+https://user-images.githubusercontent.com/105685042/193132193-f18325ad-db1c-43d7-baec-2d38f6948e8c.mp4
 
 
   <a name="license"></a>
