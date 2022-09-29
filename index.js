@@ -3,8 +3,20 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const { default: Choices } = require('inquirer/lib/objects/choices');
 
+// at Init, these will be filled with current data!
 const deptArray = [];
 const roleArray = [];
+const managerArray = [];
+
+// initial inquirer 'home' question
+const question = [
+    {
+        name: 'home',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee\'s role', 'Quit']
+    }
+]
 
 // connect mysql to database
 const connection = mysql.createConnection(
@@ -99,10 +111,9 @@ const addRole = () => {
         const roleDept = response.department;
         const roleTitle = response.newRole;
         const roleSalary = response.salary;
-        // console.log(roleDept);
         connection.query(
             // Get the id of the chosen department for the new role
-            `SELECT id FROM department WHERE name = ?`, roleDept, (err,result) => {
+            `SELECT id FROM department WHERE name = ?`, roleDept, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
@@ -142,18 +153,57 @@ const addEmployee = () => {
             message: 'Please select this new employee\'s role:',
             choices: roleArray
         },
+        {
+            name: 'manager',
+            type: 'list',
+            message: 'Please select this employee\'s manager:',
+            choices: managerArray
+        },
     ])
+    .then((response) => {
+        const first = response.firstName;
+        const last = response.lastName;
+        const role = response.role;
+        const manager = response.manager;
+
+        // To get the manager's first name
+        const managerSplit = manager.split(' ');
+        const managerFirst = managerSplit[0];
+
+        connection.query(
+            `SELECT id FROM role WHERE title = ?`, role, (err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                const roleId = result[0].id;
+
+                connection.query(
+                    `SELECT id FROM employee WHERE first_name = ?`, managerFirst, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        }
+        
+                        const managerId = result[0].id;
+                        //console.log(managerId);
+                        console.log(first, last, role, managerId);
+        
+                        connection.query(
+                            `INSERT INTO employee (first_name, last_name, role, manager_id) VALUES ('${first}', '${last}', '${roleId}', ${managerId});`,
+                            function(err, results, fields) {
+                                console.log(results);
+                                askQuestion();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
 }
 
-const question = [
-    {
-        name: 'home',
-        type: 'list',
-        message: 'What would you like to do?',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee\'s role', 'Quit']
-    }
-]
-// Inquirer
+
+// Inquirer initial prompt
 const askQuestion = () => {
 inquirer
 .prompt(question)
@@ -181,14 +231,12 @@ inquirer
         addEmployee();
     }
     else if (response.home === 'Quit') {
-        // Can I mak it exit the application, as in '^C'?
+        // Can I make it exit the application, as in '^C'?
         return;
     }
 })
 .catch((error) => {
-    console.log('Something happened. OOPS.')
-    // Something happened. OOPS.
-    
+    console.log('Something happened. OOPS.');
 });
 };
 
@@ -198,12 +246,9 @@ const init = () => {
     connection.query(
         'Select name from department;',
         function(err, results, fields) {
-            //console.log(results.length);
             //push each department name in database into a usable array
             results.forEach(dept => 
                 deptArray.push(dept.name));
-
-                //console.log(deptArray);
         }
     );
 
@@ -214,6 +259,15 @@ const init = () => {
             results.forEach(role => 
                 roleArray.push(role.title));
         }
+    );
+
+    // Get array of managers
+    connection.query(
+        `SELECT CONCAT(employee.first_name, \' \', employee.last_name) AS Managers FROM employee WHERE manager_id IS NULL;`,
+        function(err, results, fields) {
+            results.forEach(manager =>
+                managerArray.push(manager.Managers));            
+        }
     )
 
     // Ask first question
@@ -222,3 +276,5 @@ const init = () => {
 
 // Start app
 init();
+
+// SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS Managers FROM employee WHERE manager_id IS NULL;
