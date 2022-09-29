@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 const { default: Choices } = require('inquirer/lib/objects/choices');
 
 const deptArray = [];
+const roleArray = [];
 
 // connect mysql to database
 const connection = mysql.createConnection(
@@ -40,6 +41,18 @@ const viewRoles = () => {
     );
 }
 
+// query to view all employees
+const viewEmployees = () => {
+    connection.query(
+        'select a.id as ID, CONCAT(a.first_name, \' \', a.last_name) AS Employee, role.title AS \'Job Title\', salary AS Salary, department.name AS Department, CONCAT(b.first_name, \' \', b.last_name) AS Manager from employee a JOIN role ON a.role=role.id JOIN department ON role.department_id=department.id LEFT JOIN employee b ON a.manager_id=b.id;',
+        function(err, results, fields) {
+            console.table(results);
+            askQuestion();
+            //console.log(fields);
+        }
+    );
+}
+
 // query to add a department
 const addDepartment = () => {
     inquirer.prompt([
@@ -58,7 +71,7 @@ const addDepartment = () => {
                 //console.log(results);
             }
         );
-    })
+    });
 }
 
 // query to add a role
@@ -103,34 +116,34 @@ const addRole = () => {
                         console.log(results);
                         askQuestion();
                     }
-                )
-
+                );
             }
-            
-        )
-        
-        // connection.query(
-        //     `INSERT into role (title, salary, department_id) VALUES ('${response.newRole}', '${response.salary}', '${response.department}')`,
-        //     function(err, results, fields) {
-        //         console.log(results);
-        //     }
-        // )
-    })
+        );
+    });
 }
 
+// query to add an employee
+const addEmployee = () => {
 
-// query to view all employees
-const viewEmployees = () => {
-    connection.query(
-        'select a.id as ID, CONCAT(a.first_name, \' \', a.last_name) AS Employee, role.title AS \'Job Title\', salary AS Salary, department.name AS Department, CONCAT(b.first_name, \' \', b.last_name) AS Manager from employee a JOIN role ON a.role=role.id JOIN department ON role.department_id=department.id LEFT JOIN employee b ON a.manager_id=b.id;',
-        function(err, results, fields) {
-            console.table(results);
-            askQuestion();
-            //console.log(fields);
-        }
-    );
+    inquirer.prompt([
+        {
+            name: 'firstName',
+            type: 'input',
+            message: 'Please enter employee\'s first name:'
+        },
+        {
+            name: 'lastName',
+            type: 'input',
+            message: 'Please enter employee\'s last name:'
+        },
+        {
+            name: 'role',
+            type: 'list',
+            message: 'Please select this new employee\'s role:',
+            choices: roleArray
+        },
+    ])
 }
-
 
 const question = [
     {
@@ -164,6 +177,9 @@ inquirer
     else if (response.home === 'Add a role') {
         addRole();
     }
+    else if (response.home === 'Add an employee') {
+        addEmployee();
+    }
     else if (response.home === 'Quit') {
         // Can I mak it exit the application, as in '^C'?
         return;
@@ -178,7 +194,7 @@ inquirer
 
 const init = () => {
 
-    // Push departments names from database into a usable array
+    // Get array of departments
     connection.query(
         'Select name from department;',
         function(err, results, fields) {
@@ -188,9 +204,17 @@ const init = () => {
                 deptArray.push(dept.name));
 
                 //console.log(deptArray);
-
         }
     );
+
+    // Get array of roles 
+    connection.query(
+        `SELECT title from role;`,
+        function(err, results, fields) {
+            results.forEach(role => 
+                roleArray.push(role.title));
+        }
+    )
 
     // Ask first question
     askQuestion();
