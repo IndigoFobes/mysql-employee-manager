@@ -82,9 +82,22 @@ const addRole = () => {
         },
     ])
     .then((response) => {
+        // first, get the department id
+        const roleDept = response.department;
+        // select id from department where name = ${roleDept}
         connection.query(
-            `INSERT into role (title, salary, department_id)`
+            `select id from department where name = ${roleDept}`,
+            function(err, results, fields) {
+                console.log(results);
+            }
         )
+        
+        // connection.query(
+        //     `INSERT into role (title, salary, department_id) VALUES ('${response.newRole}', '${response.salary}', '${response.department}')`,
+        //     function(err, results, fields) {
+        //         console.log(results);
+        //     }
+        // )
     })
 }
 
