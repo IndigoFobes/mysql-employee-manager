@@ -6,7 +6,7 @@ const { default: Choices } = require('inquirer/lib/objects/choices');
 // at Init, these will be filled with current data!
 const deptArray = [];
 const roleArray = [];
-const managerArray = [];
+const managerArray = ['None'];
 const employeeArray = [];
 
 // initial inquirer 'home' question
@@ -23,8 +23,8 @@ const question = [
 const connection = mysql.createConnection(
     {
     host: 'localhost',
-    user: 'root',
-    password: 'FlirtyB33!',
+    user: '',
+    password: '',
     database: 'employee_db'
     },
 console.log(`Connected to database!`)
@@ -185,21 +185,36 @@ const addEmployee = () => {
                     `SELECT id FROM employee WHERE first_name = ?`, managerFirst, (err, result) => {
                         if (err) {
                             console.log(err);
+
+                        } else if (response.manager === 'none') {
+                            const managerId = 'null'
+
+                            connection.query(
+                                `INSERT INTO employee (first_name, last_name, role, manager_id) VALUES ('${first}', '${last}', '${roleId}', ${managerId});`,
+                                function(err, results, fields) {
+                                    //console.log(results);
+                                    employeeArray.push(employeeName);
+                                    //console.log(employeeArray);
+                                    askQuestion();
+                                }
+                            );
+
+                        } else {
+
+                            const managerId = result[0].id;
+                            //console.log(managerId);
+                            console.log(first, last, role, managerId);
+            
+                            connection.query(
+                                `INSERT INTO employee (first_name, last_name, role, manager_id) VALUES ('${first}', '${last}', '${roleId}', ${managerId});`,
+                                function(err, results, fields) {
+                                    //console.log(results);
+                                    employeeArray.push(employeeName);
+                                    //console.log(employeeArray);
+                                    askQuestion();
+                                }
+                            );
                         }
-        
-                        const managerId = result[0].id;
-                        //console.log(managerId);
-                        console.log(first, last, role, managerId);
-        
-                        connection.query(
-                            `INSERT INTO employee (first_name, last_name, role, manager_id) VALUES ('${first}', '${last}', '${roleId}', ${managerId});`,
-                            function(err, results, fields) {
-                                //console.log(results);
-                                employeeArray.push(employeeName);
-                                //console.log(employeeArray);
-                                askQuestion();
-                            }
-                        );
                     }
                 );
             }
