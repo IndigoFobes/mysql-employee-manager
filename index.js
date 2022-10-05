@@ -203,6 +203,9 @@ const addEmployee = () => {
     });
 }
 
+const updateEmployee = () => {
+    console.log("working on it!")
+}
 
 // Inquirer initial prompt
 const askQuestion = () => {
@@ -230,6 +233,9 @@ inquirer
     }
     else if (response.home === 'Add an employee') {
         addEmployee();
+    }
+    else if (response.home === 'Update an employee\'s role') {
+        updateEmployee();
     }
     else if (response.home === 'Quit') {
         // Can I make it exit the application, as in '^C'?
