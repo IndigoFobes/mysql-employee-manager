@@ -211,27 +211,54 @@ const updateEmployee = () => {
 
     inquirer.prompt([
         {
-            name: "employee",
-            type: "list",
-            message: "Which employee would you like to update?",
+            name: 'employee',
+            type: 'list',
+            message: 'Which employee would you like to update?',
             choices: employeeArray
         },
+        {
+            name: 'newRole',
+            type: 'list',
+            message: 'What role would you like to assign the selected employee?',
+            choices: roleArray
+        }
     ])
     .then((response) => {
 
         const employee = response.employee;
+        const role = response.newRole;
 
         connection.query(
             `SELECT id FROM employee WHERE CONCAT(employee.first_name, \' \', employee.last_name) = ?`, employee, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
-                console.log(result[0].id);
+                //console.log(result[0].id);
+                const employeeID = result[0].id;
+
+                connection.query(
+                    `SELECT id FROM role WHERE title = ?`, role, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        }
+        
+                        const roleId = result[0].id;
+
+                        connection.query(
+                            `UPDATE employee SET role = ${roleId} WHERE id = ?`, employeeID, (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                }
+
+                                console.log(result);
+                                askQuestion();
+                            }
+                        )
+
+                    }
+                );
             }
-        )
-        // connection.query(
-    //     `UPDATE employee SET role WHERE id = ?`
-    // )
+        );
     });
 }
 
@@ -267,6 +294,7 @@ inquirer
     }
     else if (response.home === 'Quit') {
         // Can I make it exit the application, as in '^C'?
+        console.log('Bye! Type control-C to exit the application.')
         return;
     }
 })
