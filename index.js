@@ -167,7 +167,7 @@ const addEmployee = () => {
         const last = response.lastName;
         const role = response.role;
         const manager = response.manager;
-        const employeeName = first.concat(' ', last);
+        const employeeName = first.concat(' ', last); // for pushing into employeeArray
 
         // To get the manager's first name
         const managerSplit = manager.split(' ');
@@ -196,7 +196,7 @@ const addEmployee = () => {
                             function(err, results, fields) {
                                 //console.log(results);
                                 employeeArray.push(employeeName);
-                                console.log(employeeArray);
+                                //console.log(employeeArray);
                                 askQuestion();
                             }
                         );
@@ -209,6 +209,21 @@ const addEmployee = () => {
 
 const updateEmployee = () => {
 
+    inquirer.prompt([
+        {
+            name: "employee",
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: employeeArray
+        },
+    ])
+    .then((response) => {
+
+        console.log(response.employee);
+        // connection.query(
+    //     `UPDATE employee SET role WHERE id = ?`
+    // )
+    });
 }
 
 // Inquirer initial prompt
