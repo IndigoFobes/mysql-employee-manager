@@ -219,7 +219,16 @@ const updateEmployee = () => {
     ])
     .then((response) => {
 
-        console.log(response.employee);
+        const employee = response.employee;
+
+        connection.query(
+            `SELECT id FROM employee WHERE CONCAT(employee.first_name, \' \', employee.last_name) = ?`, employee, (err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(result[0].id);
+            }
+        )
         // connection.query(
     //     `UPDATE employee SET role WHERE id = ?`
     // )
