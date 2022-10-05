@@ -7,6 +7,7 @@ const { default: Choices } = require('inquirer/lib/objects/choices');
 const deptArray = [];
 const roleArray = [];
 const managerArray = [];
+const employeeArray = [];
 
 // initial inquirer 'home' question
 const question = [
@@ -166,6 +167,7 @@ const addEmployee = () => {
         const last = response.lastName;
         const role = response.role;
         const manager = response.manager;
+        const employeeName = first.concat(' ', last);
 
         // To get the manager's first name
         const managerSplit = manager.split(' ');
@@ -192,7 +194,9 @@ const addEmployee = () => {
                         connection.query(
                             `INSERT INTO employee (first_name, last_name, role, manager_id) VALUES ('${first}', '${last}', '${roleId}', ${managerId});`,
                             function(err, results, fields) {
-                                console.log(results);
+                                //console.log(results);
+                                employeeArray.push(employeeName);
+                                console.log(employeeArray);
                                 askQuestion();
                             }
                         );
@@ -204,7 +208,7 @@ const addEmployee = () => {
 }
 
 const updateEmployee = () => {
-    console.log("working on it!")
+
 }
 
 // Inquirer initial prompt
@@ -275,7 +279,17 @@ const init = () => {
             results.forEach(manager =>
                 managerArray.push(manager.Managers));            
         }
-    )
+    );
+
+    // Get array of employees
+    connection.query(
+        `SELECT CONCAT(employee.first_name, \' \', employee.last_name) AS name FROM employee;`,
+        function(err, results, fields) {
+            results.forEach(employee =>
+                employeeArray.push(employee.name));
+                //console.log(employeeArray);
+        }
+    );
 
     // Ask first question
     askQuestion();
@@ -283,5 +297,3 @@ const init = () => {
 
 // Start app
 init();
-
-// SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS Managers FROM employee WHERE manager_id IS NULL;
