@@ -23,8 +23,8 @@ const question = [
 const connection = mysql.createConnection(
     {
     host: 'localhost',
-    user: '',
-    password: '',
+    user: 'root',
+    password: 'FlirtyB33!',
     database: 'employee_db'
     },
 console.log(`Connected to database!`)
@@ -236,12 +236,19 @@ const updateEmployee = () => {
             type: 'list',
             message: 'What role would you like to assign the selected employee?',
             choices: roleArray
-        }
+        },
+        {
+            name: 'newManager',
+            type: 'list',
+            message: 'If you would also like to assign a new manager to this employee, select one of the following. Otherwise, select "none"',
+            choices: managerArray
+        },
     ])
     .then((response) => {
 
         const employee = response.employee;
         const role = response.newRole;
+        const manager = response.newManager;
 
         connection.query(
             `SELECT id FROM employee WHERE CONCAT(employee.first_name, \' \', employee.last_name) = ?`, employee, (err, result) => {
@@ -265,8 +272,49 @@ const updateEmployee = () => {
                                     console.log(err);
                                 }
 
-                                console.log(result);
+                                //console.log(result);
                                 askQuestion();
+
+                                //console.log(manager);
+
+                                // To get the manager's first name
+                                const managerSplit = manager.split(' ');
+                                const managerFirst = managerSplit[0];
+
+                                connection.query(
+                                    `SELECT id FROM employee WHERE first_name = ?`, managerFirst, (err, result) => {
+                                        if (err) {
+                                            console.log(err);
+                                        } else if (manager === 'None') {
+                                                const managerId = 'null';
+
+                                                // update manager to null
+                                                connection.query(
+                                                    `UPDATE employee SET manager_id = ${managerId} WHERE id = ?`, employeeID, (err, result) => {
+                                                        if (err) {
+                                                            console.log(err);
+                                                        }
+
+                                                        askQuestion();
+                                                    }
+                                                )
+                                            } else {
+                                                const managerId = result[0].id;
+                                                //console.log(result);
+
+                                                connection.query(
+                                                    `UPDATE employee SET manager_id = ${managerId} WHERE id = ?`, employeeID, (err, result) => {
+                                                        if (err) {
+                                                            console.log(err);
+                                                        }
+
+                                                        askQuestion();
+                                                    }
+                                                )
+                                            }
+                                        
+                                    }
+                                )
                             }
                         )
 
@@ -322,7 +370,7 @@ const init = () => {
 
     // Get array of departments
     connection.query(
-        'Select name from department;',
+        'SELECT name from department;',
         function(err, results, fields) {
             //push each department name in database into a usable array
             results.forEach(dept => 
