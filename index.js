@@ -250,37 +250,40 @@ const updateEmployee = () => {
         const role = response.newRole;
         const manager = response.newManager;
 
+        // get the selected employee's id
         connection.query(
             `SELECT id FROM employee WHERE CONCAT(employee.first_name, \' \', employee.last_name) = ?`, employee, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
-                //console.log(result[0].id);
+
+                // this constant is the selected employee's id
                 const employeeID = result[0].id;
 
+                // get the selected role's id
                 connection.query(
                     `SELECT id FROM role WHERE title = ?`, role, (err, result) => {
                         if (err) {
                             console.log(err);
                         }
         
+                        // this constant is the selected role's id
                         const roleId = result[0].id;
 
+                        // update the selected employee's role based on selected role id
                         connection.query(
                             `UPDATE employee SET role = ${roleId} WHERE id = ?`, employeeID, (err, result) => {
                                 if (err) {
                                     console.log(err);
                                 }
 
-                                //console.log(result);
                                 askQuestion();
-
-                                //console.log(manager);
 
                                 // To get the manager's first name
                                 const managerSplit = manager.split(' ');
                                 const managerFirst = managerSplit[0];
 
+                                // get the id of the selected manager
                                 connection.query(
                                     `SELECT id FROM employee WHERE first_name = ?`, managerFirst, (err, result) => {
                                         if (err) {
@@ -302,6 +305,7 @@ const updateEmployee = () => {
                                                 const managerId = result[0].id;
                                                 //console.log(result);
 
+                                                // update manager to selected manager
                                                 connection.query(
                                                     `UPDATE employee SET manager_id = ${managerId} WHERE id = ?`, employeeID, (err, result) => {
                                                         if (err) {
@@ -312,7 +316,6 @@ const updateEmployee = () => {
                                                     }
                                                 )
                                             }
-                                        
                                     }
                                 )
                             }
