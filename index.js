@@ -23,8 +23,8 @@ const question = [
 const connection = mysql.createConnection(
     {
     host: 'localhost',
-    user: 'root',
-    password: 'FlirtyB33!',
+    user: '',
+    password: '',
     database: 'employee_db'
     },
 console.log(`Connected to database!`)
